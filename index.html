@@ -1,0 +1,34 @@
+<html>
+<body>
+    <style>
+        @font-face {
+            font-family: "DPix";
+            src: url("res/Dpix_8pt.ttf"),
+                 url("res/dpix_8pt-webfont.woff") format('woff'),
+                 url("res/dpix_8pt-webfont.woff2") format('woff2');
+        }
+        * {
+            padding: 0;
+            margin: 0;
+            font-family: 'DPix', serif;
+        }
+        canvas {
+            margin: 0 auto;
+            font-family: 'DPix', serif;
+        }
+    </style>
+
+    <script src="node_modules/systemjs/dist/system.js"></script>
+    <script src="index.js"></script>
+    <script>
+        System.defaultJSExtensions = true;
+        System.config({
+            map: {
+                'pixi.js': 'node_modules/pixi.js/dist/pixi.js',
+            },
+        });
+        System.import('index').then(null, console.error.bind(console));
+    </script>
+</body>
+<div>***</div><!--TODO без этого не работает шрифт в канвасе -->
+</html>

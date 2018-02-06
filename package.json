@@ -1,0 +1,20 @@
+{
+  "name": "irka",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "start": "lite-server",
+    "watch": "tsc -w"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@types/pixi.js": "^4.6.3",
+    "pixi.js": "^4.7.0",
+    "systemjs": "^0.20.19",
+    "typescript": "^2.6.2"
+  },
+  "devDependencies": {
+    "lite-server": "^2.3.0"
+  }
+}
