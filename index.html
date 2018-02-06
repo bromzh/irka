@@ -18,13 +18,13 @@
         }
     </style>
 
-    <script src="node_modules/systemjs/dist/system.js"></script>
+    <script src="system.js"></script>
     <script src="index.js"></script>
     <script>
         System.defaultJSExtensions = true;
         System.config({
             map: {
-                'pixi.js': 'node_modules/pixi.js/dist/pixi.js',
+                'pixi.js': 'pixi.js',
             },
         });
         System.import('index').then(null, console.error.bind(console));
