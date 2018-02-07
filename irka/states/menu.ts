@@ -1,32 +1,39 @@
-import { Application, Container, Sprite, Text, TextStyle, utils } from 'pixi.js';
+import { Application, Container, Sprite, Text, TextStyle, DisplayObject, utils } from 'pixi.js';
 import MultiStyleText from '../multystyle-text';
-import { makeTextBox } from '../utils';
+import { darkFilter, makeTextBox, smallCenteredText } from '../utils';
 
-const defaultTextStyle = {
-    fontFamily: 'DPix',
-    fontSize: '14px',
-};
+function makeQuizButton(): Container {
+    const quiz = new Container();
+    const quizArea = new Sprite(utils.TextureCache['menu/mm_02.png']);
+    const text = makeTextBox(new Text('Начать\nхимический\nтест', smallCenteredText));
 
-const mstStyles = {
-    'default': defaultTextStyle,
-    'sup': {
-        fontSize: '10px',
-        textBaseline: 'bottom',
-        valign: -4
-    },
-};
+    text.alpha = 0;
+    quiz.addChild(quizArea);
+    quiz.buttonMode = true;
+    quiz.interactive = true;
 
-const textStyle = new TextStyle(defaultTextStyle);
+    text.x = quizArea.width / 2 - text.width / 2 - 25;
+    text.y = quizArea.height / 2 - text.height / 2;
+    quiz.addChild(text);
 
-function makeButtons(): Container {
-    const buttonsContainer = new Container();
+    const onPointerOver = () => {
+        quizArea.filters = [darkFilter];
+        text.alpha = 1;
 
-    let startText = new Text('старт', textStyle);
-    // let exit
+    };
+    const onPointerOut = () => {
+        quizArea.filters = [];
+        text.alpha = 0;
+    };
+    const onPointerDown = () => {
+        quiz.emit('startQuiz');
+    };
 
-    buttonsContainer.addChild(startText);
+    quiz.on('pointerover', onPointerOver);
+    quiz.on('pointerout', onPointerOut);
+    quiz.on('pointerdown', onPointerDown);
 
-    return buttonsContainer;
+    return quiz;
 }
 
 export function makeMenu(app: Application): Container {
@@ -38,13 +45,16 @@ export function makeMenu(app: Application): Container {
     bg.x = 0;
     bg.y = 0;
 
-    // let textBox = makeTextBox(text);
+    let quiz = makeQuizButton();
+    quiz.x = 256;
+    quiz.y = 256;
 
-    // textBox.x = 10;
-    // textBox.y = 10;
+    quiz.on('startQuiz', () => {
+        app.stage.emit('startQuiz');
+    });
 
     menuContainer.addChild(bg);
-    // menuContainer.addChild(textBox);
+    menuContainer.addChild(quiz);
 
     return menuContainer;
 }

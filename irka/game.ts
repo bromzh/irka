@@ -1,7 +1,6 @@
-import * as PIXI from 'pixi.js';
-import { Application, Sprite, Text, TextStyle, loader, utils } from 'pixi.js';
+import { Application, Sprite, Container, Texture, TextStyle, loader, utils } from 'pixi.js';
 import { makeMenu } from './states/menu';
-// import  = PIXI.TextStyle;
+import { makeQuiz } from './states/quiz';
 
 function setupRenderer(app: Application): void {
     app.renderer.view.style.display = "block";
@@ -15,9 +14,17 @@ function loaderHandler(loader: any, resource: any) {
 
 function setup(app: Application) {
     const menu = makeMenu(app);
+    const quiz = makeQuiz(app);
+
+    quiz.visible = false;
+
+    app.stage.on('startQuiz', () => {
+        menu.visible = false;
+        quiz.visible = true;
+    });
 
     app.stage.addChild(menu);
-    // app.stage.addChild(text);
+    app.stage.addChild(quiz);
 }
 
 

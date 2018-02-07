@@ -1,25 +1,28 @@
-import { Application, Container, Sprite, Text, TextStyle, utils } from 'pixi.js';
+import { Application, Container, Sprite, Text, TextStyle, Texture, utils } from 'pixi.js';
 import MultiStyleText from '../multystyle-text';
 import { makeTextBox } from '../utils';
 
-const defaultTextStyle = {
-    fontFamily: 'DPix',
-    fontSize: '14px',
-};
+interface Answer {
+    text: Text;
+    isTruth: boolean;
+}
 
-const mstStyles = {
-    'default': defaultTextStyle,
-    'sup': {
-        fontSize: '10px',
-        textBaseline: 'bottom',
-        valign: -4
-    },
-};
+class Quiz {
+    text: Text;
+    answers: Answer[];
+}
 
-const quizSprites = {
-    bg: 'lvl/test_bgr.png',
-    btn: 'lvl/test_button_disabled.png',
-    btnSelected: 'lvl/test_button_enabled.png',
-};
+function makeQuizUi(): Container {
+    const s = new Container();
 
-const textStyle = new TextStyle(defaultTextStyle);
+    return s;
+}
+
+export function makeQuiz(app: Application): Container {
+    const quizCoontainer = new Container();
+
+    const bg = new Sprite(new Texture(utils.TextureCache['lvl/test_bgr.png']));
+    quizCoontainer.addChild(bg);
+
+    return quizCoontainer;
+}

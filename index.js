@@ -8,6 +8,14 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+var __assign = (this && this.__assign) || Object.assign || function(t) {
+    for (var s, i = 1, n = arguments.length; i < n; i++) {
+        s = arguments[i];
+        for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+            t[p] = s[p];
+    }
+    return t;
+};
 /// <reference types="pixi.js" />
 System.register("irka/multystyle-text", [], function (exports_1, context_1) {
     "use strict";
@@ -655,7 +663,7 @@ System.register("irka/utils", ["pixi.js"], function (exports_2, context_2) {
         return container;
     }
     exports_2("makeTextBox", makeTextBox);
-    var pixi_js_1;
+    var pixi_js_1, colorMatrixDark, darkFilter, defaultTextStyle, smallTextStyle, centeredText, smallCenteredText, mstStyles;
     return {
         setters: [
             function (pixi_js_1_1) {
@@ -663,18 +671,71 @@ System.register("irka/utils", ["pixi.js"], function (exports_2, context_2) {
             }
         ],
         execute: function () {
+            colorMatrixDark = [
+                1.1285582396593525, -0.3967382283601348, -0.03992559172921793, 0, 0,
+                -0.16404339962244616, 1.0835251566291304, -0.05498805115633132, -0.3, -0.1,
+                -0.16786010706155763, -0.5603416277695248, 1.6014850761964943, -0.3, 0.1,
+                0, 0, 0, 1, 0
+            ];
+            exports_2("darkFilter", darkFilter = new pixi_js_1.filters.ColorMatrixFilter());
+            darkFilter.matrix = colorMatrixDark;
+            exports_2("defaultTextStyle", defaultTextStyle = {
+                fontFamily: 'DPix',
+                fontSize: '14px',
+            });
+            exports_2("smallTextStyle", smallTextStyle = {
+                fontSize: '10px',
+            });
+            exports_2("centeredText", centeredText = {
+                align: 'center',
+            });
+            exports_2("smallCenteredText", smallCenteredText = __assign({}, defaultTextStyle, smallTextStyle, centeredText));
+            exports_2("mstStyles", mstStyles = {
+                'default': defaultTextStyle,
+                'sup': {
+                    fontSize: '10px',
+                    textBaseline: 'bottom',
+                    valign: -4
+                },
+                'sm': {
+                    fontSize: '10px',
+                },
+                'center': {
+                    align: 'center',
+                }
+            });
         }
     };
 });
-System.register("irka/states/menu", ["pixi.js"], function (exports_3, context_3) {
+System.register("irka/states/menu", ["pixi.js", "irka/utils"], function (exports_3, context_3) {
     "use strict";
     var __moduleName = context_3 && context_3.id;
-    function makeButtons() {
-        var buttonsContainer = new pixi_js_2.Container();
-        var startText = new pixi_js_2.Text('старт', textStyle);
-        // let exit
-        buttonsContainer.addChild(startText);
-        return buttonsContainer;
+    function makeQuizButton() {
+        var quiz = new pixi_js_2.Container();
+        var quizArea = new pixi_js_2.Sprite(pixi_js_2.utils.TextureCache['menu/mm_02.png']);
+        var text = utils_1.makeTextBox(new pixi_js_2.Text('Начать\nхимический\nтест', utils_1.smallCenteredText));
+        text.alpha = 0;
+        quiz.addChild(quizArea);
+        quiz.buttonMode = true;
+        quiz.interactive = true;
+        text.x = quizArea.width / 2 - text.width / 2 - 25;
+        text.y = quizArea.height / 2 - text.height / 2;
+        quiz.addChild(text);
+        var onPointerOver = function () {
+            quizArea.filters = [utils_1.darkFilter];
+            text.alpha = 1;
+        };
+        var onPointerOut = function () {
+            quizArea.filters = [];
+            text.alpha = 0;
+        };
+        var onPointerDown = function () {
+            quiz.emit('startQuiz');
+        };
+        quiz.on('pointerover', onPointerOver);
+        quiz.on('pointerout', onPointerOut);
+        quiz.on('pointerdown', onPointerDown);
+        return quiz;
     }
     function makeMenu(app) {
         var menuContainer = new pixi_js_2.Container();
@@ -682,42 +743,64 @@ System.register("irka/states/menu", ["pixi.js"], function (exports_3, context_3)
         var bg = new pixi_js_2.Sprite(bgTexture);
         bg.x = 0;
         bg.y = 0;
-        // let textBox = makeTextBox(text);
-        // textBox.x = 10;
-        // textBox.y = 10;
+        var quiz = makeQuizButton();
+        quiz.x = 256;
+        quiz.y = 256;
+        quiz.on('startQuiz', function () {
+            app.stage.emit('startQuiz');
+        });
         menuContainer.addChild(bg);
-        // menuContainer.addChild(textBox);
+        menuContainer.addChild(quiz);
         return menuContainer;
     }
     exports_3("makeMenu", makeMenu);
-    var pixi_js_2, defaultTextStyle, mstStyles, textStyle;
+    var pixi_js_2, utils_1;
     return {
         setters: [
             function (pixi_js_2_1) {
                 pixi_js_2 = pixi_js_2_1;
+            },
+            function (utils_1_1) {
+                utils_1 = utils_1_1;
             }
         ],
         execute: function () {
-            defaultTextStyle = {
-                fontFamily: 'DPix',
-                fontSize: '14px',
-            };
-            mstStyles = {
-                'default': defaultTextStyle,
-                'sup': {
-                    fontSize: '10px',
-                    textBaseline: 'bottom',
-                    valign: -4
-                },
-            };
-            textStyle = new pixi_js_2.TextStyle(defaultTextStyle);
         }
     };
 });
-System.register("irka/game", ["pixi.js", "irka/states/menu"], function (exports_4, context_4) {
+System.register("irka/states/quiz", ["pixi.js"], function (exports_4, context_4) {
     "use strict";
     var __moduleName = context_4 && context_4.id;
-    // import  = PIXI.TextStyle;
+    function makeQuizUi() {
+        var s = new pixi_js_3.Container();
+        return s;
+    }
+    function makeQuiz(app) {
+        var quizCoontainer = new pixi_js_3.Container();
+        var bg = new pixi_js_3.Sprite(new pixi_js_3.Texture(pixi_js_3.utils.TextureCache['lvl/test_bgr.png']));
+        quizCoontainer.addChild(bg);
+        return quizCoontainer;
+    }
+    exports_4("makeQuiz", makeQuiz);
+    var pixi_js_3, Quiz;
+    return {
+        setters: [
+            function (pixi_js_3_1) {
+                pixi_js_3 = pixi_js_3_1;
+            }
+        ],
+        execute: function () {
+            Quiz = /** @class */ (function () {
+                function Quiz() {
+                }
+                return Quiz;
+            }());
+        }
+    };
+});
+System.register("irka/game", ["pixi.js", "irka/states/menu", "irka/states/quiz"], function (exports_5, context_5) {
+    "use strict";
+    var __moduleName = context_5 && context_5.id;
     function setupRenderer(app) {
         app.renderer.view.style.display = "block";
         app.renderer.autoResize = true;
@@ -728,39 +811,48 @@ System.register("irka/game", ["pixi.js", "irka/states/menu"], function (exports_
     }
     function setup(app) {
         var menu = menu_1.makeMenu(app);
+        var quiz = quiz_1.makeQuiz(app);
+        quiz.visible = false;
+        app.stage.on('startQuiz', function () {
+            menu.visible = false;
+            quiz.visible = true;
+        });
         app.stage.addChild(menu);
-        // app.stage.addChild(text);
+        app.stage.addChild(quiz);
     }
     function init() {
-        var app = new pixi_js_3.Application({
+        var app = new pixi_js_4.Application({
             antialias: true,
             transparent: false,
             resolution: 1,
         });
         setupRenderer(app);
-        pixi_js_3.loader.add('res/irka.json')
+        pixi_js_4.loader.add('res/irka.json')
             .on('progress', loaderHandler)
             .load(function () { return setup(app); });
         return app;
     }
-    exports_4("init", init);
-    var pixi_js_3, menu_1;
+    exports_5("init", init);
+    var pixi_js_4, menu_1, quiz_1;
     return {
         setters: [
-            function (pixi_js_3_1) {
-                pixi_js_3 = pixi_js_3_1;
+            function (pixi_js_4_1) {
+                pixi_js_4 = pixi_js_4_1;
             },
             function (menu_1_1) {
                 menu_1 = menu_1_1;
+            },
+            function (quiz_1_1) {
+                quiz_1 = quiz_1_1;
             }
         ],
         execute: function () {
         }
     };
 });
-System.register("index", ["irka/game"], function (exports_5, context_5) {
+System.register("index", ["irka/game"], function (exports_6, context_6) {
     "use strict";
-    var __moduleName = context_5 && context_5.id;
+    var __moduleName = context_6 && context_6.id;
     var game_1, app;
     return {
         setters: [
@@ -772,38 +864,6 @@ System.register("index", ["irka/game"], function (exports_5, context_5) {
             app = game_1.init();
             console.log(app);
             document.body.appendChild(app.view);
-        }
-    };
-});
-System.register("irka/states/quiz", ["pixi.js"], function (exports_6, context_6) {
-    "use strict";
-    var __moduleName = context_6 && context_6.id;
-    var pixi_js_4, defaultTextStyle, mstStyles, quizSprites, textStyle;
-    return {
-        setters: [
-            function (pixi_js_4_1) {
-                pixi_js_4 = pixi_js_4_1;
-            }
-        ],
-        execute: function () {
-            defaultTextStyle = {
-                fontFamily: 'DPix',
-                fontSize: '14px',
-            };
-            mstStyles = {
-                'default': defaultTextStyle,
-                'sup': {
-                    fontSize: '10px',
-                    textBaseline: 'bottom',
-                    valign: -4
-                },
-            };
-            quizSprites = {
-                bg: 'lvl/test_bgr.png',
-                btn: 'lvl/test_button_disabled.png',
-                btnSelected: 'lvl/test_button_enabled.png',
-            };
-            textStyle = new pixi_js_4.TextStyle(defaultTextStyle);
         }
     };
 });
