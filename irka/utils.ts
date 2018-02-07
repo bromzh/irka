@@ -46,7 +46,7 @@ export const smallCenteredText = {...{}, ...defaultTextStyle, ...smallTextStyle,
 
 export const mstStyles = {
     'default': defaultTextStyle,
-    'sup': {
+    'sub': {
         fontSize: '10px',
         textBaseline: 'bottom',
         valign: -4

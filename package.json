@@ -4,6 +4,7 @@
   "description": "",
   "scripts": {
     "start": "lite-server",
+    "build": "tsc",
     "watch": "tsc -w"
   },
   "author": "",

@@ -692,7 +692,7 @@ System.register("irka/utils", ["pixi.js"], function (exports_2, context_2) {
             exports_2("smallCenteredText", smallCenteredText = __assign({}, defaultTextStyle, smallTextStyle, centeredText));
             exports_2("mstStyles", mstStyles = {
                 'default': defaultTextStyle,
-                'sup': {
+                'sub': {
                     fontSize: '10px',
                     textBaseline: 'bottom',
                     valign: -4
@@ -768,33 +768,99 @@ System.register("irka/states/menu", ["pixi.js", "irka/utils"], function (exports
         }
     };
 });
-System.register("irka/states/quiz", ["pixi.js"], function (exports_4, context_4) {
+System.register("irka/states/quiz", ["pixi.js", "irka/multystyle-text", "irka/utils"], function (exports_4, context_4) {
     "use strict";
     var __moduleName = context_4 && context_4.id;
+    function makeButton(text) {
+        var btn = new pixi_js_3.Container();
+        btn.interactive = true;
+        btn.buttonMode = true;
+        btn.height = W;
+        btn.width = H;
+        var defaultButton = new pixi_js_3.Graphics();
+        defaultButton.lineStyle(1, 0x0AB4B4);
+        defaultButton.beginFill(0xffffff);
+        defaultButton.drawRect(0, 0, W, H);
+        defaultButton.endFill();
+        var selectedButton = new pixi_js_3.Graphics();
+        selectedButton.lineStyle(1, 0x0AB4B4);
+        selectedButton.beginFill(0x54D1E4);
+        selectedButton.drawRect(0, 0, W, H);
+        selectedButton.endFill();
+        selectedButton.visible = false;
+        var msText = new multystyle_text_1.default(text, utils_2.mstStyles);
+        msText.x = W / 2 - msText.width / 2;
+        msText.y = H / 2 - msText.height / 2;
+        btn.addChild(defaultButton);
+        btn.addChild(selectedButton);
+        btn.addChild(msText);
+        btn.on('pointerover', function () {
+            defaultButton.visible = false;
+            selectedButton.visible = true;
+        });
+        btn.on('pointerout', function () {
+            selectedButton.visible = false;
+            defaultButton.visible = true;
+        });
+        return btn;
+    }
+    function makeButtons(texts) {
+        var btns = new pixi_js_3.Container();
+        var bg = new pixi_js_3.Graphics();
+        bg.beginFill(0x98ECFF);
+        bg.drawRect(0, 0, W + P * 2, P + texts.length * (H + P));
+        bg.endFill();
+        btns.addChild(bg);
+        for (var i = 0; i < texts.length; ++i) {
+            var btn = makeButton(texts[i]);
+            btn.x = P;
+            btn.y = P + i * (H + P);
+            btns.addChild(btn);
+        }
+        return btns;
+    }
     function makeQuizUi() {
         var s = new pixi_js_3.Container();
+        var buttons = makeButtons(TEXTS);
+        buttons.y = 81;
+        s.addChild(buttons);
         return s;
     }
     function makeQuiz(app) {
-        var quizCoontainer = new pixi_js_3.Container();
+        var container = new pixi_js_3.Container();
         var bg = new pixi_js_3.Sprite(new pixi_js_3.Texture(pixi_js_3.utils.TextureCache['lvl/test_bgr.png']));
-        quizCoontainer.addChild(bg);
-        return quizCoontainer;
+        container.addChild(bg);
+        var quizUi = makeQuizUi();
+        container.addChild(quizUi);
+        return container;
     }
     exports_4("makeQuiz", makeQuiz);
-    var pixi_js_3, Quiz;
+    var pixi_js_3, multystyle_text_1, utils_2, W, H, P, RA, DA, UA, TEXTS;
     return {
         setters: [
             function (pixi_js_3_1) {
                 pixi_js_3 = pixi_js_3_1;
+            },
+            function (multystyle_text_1_1) {
+                multystyle_text_1 = multystyle_text_1_1;
+            },
+            function (utils_2_1) {
+                utils_2 = utils_2_1;
             }
         ],
         execute: function () {
-            Quiz = /** @class */ (function () {
-                function Quiz() {
-                }
-                return Quiz;
-            }());
+            W = 352;
+            H = 80;
+            P = 5;
+            RA = '→';
+            DA = '↓';
+            UA = '↑';
+            TEXTS = [
+                "CuSO<sub>4</sub> + (NH<sub>4</sub>)<sub>2</sub>S \u2192 CuS\u2193 + (NH<sub>4</sub>)<sub>2</sub>SO<sub>4</sub>",
+                "Ni(NO<sub>3</sub>)<sub>2</sub> \u2192 Ni(NO<sub>2</sub>)<sub>2</sub> + O<sub>2</sub>\u2191",
+                "CuCO<sub>3</sub> \u2192 CO<sub>2</sub>\u2191 + CuO",
+                "2Cu(NO<sub>3</sub>)<sub>2</sub> \u2192 2CuO + 4NO<sub>2</sub> + O<sub>2</sub>\u2191",
+            ];
         }
     };
 });
@@ -867,3 +933,4 @@ System.register("index", ["irka/game"], function (exports_6, context_6) {
         }
     };
 });
+//# sourceMappingURL=index.js.map
