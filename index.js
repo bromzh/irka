@@ -697,8 +697,11 @@ System.register("irka/utils", ["pixi.js"], function (exports_2, context_2) {
                     textBaseline: 'bottom',
                     valign: -4
                 },
+                'md': {
+                    fontSize: '13px',
+                },
                 'sm': {
-                    fontSize: '10px',
+                    fontSize: '9px',
                 },
                 'center': {
                     align: 'center',
@@ -714,7 +717,7 @@ System.register("irka/states/menu", ["pixi.js", "irka/utils"], function (exports
         var quiz = new pixi_js_2.Container();
         var quizArea = new pixi_js_2.Sprite(pixi_js_2.utils.TextureCache['menu/mm_02.png']);
         var text = utils_1.makeTextBox(new pixi_js_2.Text('Начать\nхимический\nтест', utils_1.smallCenteredText));
-        text.alpha = 0;
+        text.visible = false;
         quiz.addChild(quizArea);
         quiz.buttonMode = true;
         quiz.interactive = true;
@@ -723,13 +726,15 @@ System.register("irka/states/menu", ["pixi.js", "irka/utils"], function (exports
         quiz.addChild(text);
         var onPointerOver = function () {
             quizArea.filters = [utils_1.darkFilter];
-            text.alpha = 1;
+            text.visible = true;
         };
         var onPointerOut = function () {
             quizArea.filters = [];
-            text.alpha = 0;
+            text.visible = false;
         };
         var onPointerDown = function () {
+            quizArea.filters = [];
+            text.visible = false;
             quiz.emit('startQuiz');
         };
         quiz.on('pointerover', onPointerOver);
@@ -768,74 +773,72 @@ System.register("irka/states/menu", ["pixi.js", "irka/utils"], function (exports
         }
     };
 });
-System.register("irka/states/quiz", ["pixi.js", "irka/multystyle-text", "irka/utils"], function (exports_4, context_4) {
+System.register("irka/questions", [], function (exports_4, context_4) {
     "use strict";
     var __moduleName = context_4 && context_4.id;
-    function makeButton(text) {
-        var btn = new pixi_js_3.Container();
-        btn.interactive = true;
-        btn.buttonMode = true;
-        btn.height = W;
-        btn.width = H;
-        var defaultButton = new pixi_js_3.Graphics();
-        defaultButton.lineStyle(1, 0x0AB4B4);
-        defaultButton.beginFill(0xffffff);
-        defaultButton.drawRect(0, 0, W, H);
-        defaultButton.endFill();
-        var selectedButton = new pixi_js_3.Graphics();
-        selectedButton.lineStyle(1, 0x0AB4B4);
-        selectedButton.beginFill(0x54D1E4);
-        selectedButton.drawRect(0, 0, W, H);
-        selectedButton.endFill();
-        selectedButton.visible = false;
-        var msText = new multystyle_text_1.default(text, utils_2.mstStyles);
-        msText.x = W / 2 - msText.width / 2;
-        msText.y = H / 2 - msText.height / 2;
-        btn.addChild(defaultButton);
-        btn.addChild(selectedButton);
-        btn.addChild(msText);
-        btn.on('pointerover', function () {
-            defaultButton.visible = false;
-            selectedButton.visible = true;
-        });
-        btn.on('pointerout', function () {
-            selectedButton.visible = false;
-            defaultButton.visible = true;
-        });
-        return btn;
-    }
-    function makeButtons(texts) {
-        var btns = new pixi_js_3.Container();
-        var bg = new pixi_js_3.Graphics();
-        bg.beginFill(0x98ECFF);
-        bg.drawRect(0, 0, W + P * 2, P + texts.length * (H + P));
-        bg.endFill();
-        btns.addChild(bg);
-        for (var i = 0; i < texts.length; ++i) {
-            var btn = makeButton(texts[i]);
-            btn.x = P;
-            btn.y = P + i * (H + P);
-            btns.addChild(btn);
+    var Q1, Q2, Q3, QUESTIONS;
+    return {
+        setters: [],
+        execute: function () {
+            Q1 = {
+                texts: [
+                    "<sm>\u0412\u044B\u0434\u0430\u043D\u043D\u0443\u044E \u0441\u043E\u043B\u044C \u2014 \u0431\u0435\u043B\u044B\u0439,\n\u043D\u0435\u0440\u0430\u0441\u0442\u0432\u043E\u0440\u0438\u043C\u044B\u0439 \u0432 \u0432\u043E\u0434\u0435 \u043F\u043E\u0440\u043E\u0448\u043E\u043A \u0441\n\u0437\u0435\u043B\u0435\u043D\u043E\u0432\u0430\u0442\u044B\u043C \u043E\u0442\u0442\u0435\u043D\u043A\u043E\u043C \u2014 \u043F\u043E\u0434\u0432\u0435\u0440\u0433\u0430\u0435\u0442\u0441\u044F \n\u0442\u0435\u0440\u043C\u0438\u0447\u0435\u0441\u043A\u043E\u043C\u0443 \u0440\u0430\u0437\u043B\u043E\u0436\u0435\u043D\u0438\u044E, \u0432 \n\u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442\u0435 \u043A\u043E\u0442\u043E\u0440\u043E\u0433\u043E \u043E\u0431\u0440\u0430\u0437\u043E\u0432\u0430\u043B\u043E\u0441\u044C \n\u0434\u0432\u0430 \u043E\u043A\u0441\u0438\u0434\u0430. \u041E\u0434\u0438\u043D \u0438\u0437 \u043D\u0438\u0445\u00A0\u2014 \u0433\u0430\u0437 \n\u0431\u0435\u0437 \u0446\u0432\u0435\u0442\u0430 \u0438 \u0437\u0430\u043F\u0430\u0445\u0430, \u0438\u0433\u0440\u0430\u044E\u0449\u0438\u0439\n\u0432\u0430\u0436\u043D\u0443\u044E \u0440\u043E\u043B\u044C \u0432 \u043F\u0440\u043E\u0446\u0435\u0441\u0441\u0435 \u0444\u043E\u0442\u043E\u0441\u0438\u043D\u0442\u0435\u0437\u0430. \n\u0414\u0440\u0443\u0433\u043E\u0439 \u2014 \u043F\u043E\u0440\u043E\u0448\u043E\u043A \u0447\u0451\u0440\u043D\u043E\u0433\u043E \u0446\u0432\u0435\u0442\u0430.</sm>",
+                    "<sm>\u041A \u043F\u043E\u043B\u0443\u0447\u0435\u043D\u043D\u043E\u043C\u0443 \u043E\u043A\u0441\u0438\u0434\u0443 \n\u0447\u0451\u0440\u043D\u043E\u0433\u043E \u0446\u0432\u0435\u0442\u0430 \u0434\u043E\u0431\u0430\u0432\u0438\u043B\u0438 \u0440\u0430\u0437\u0431\u0430\u0432\u043B\u0435\u043D\u043D\u0443\u044E\n\u0441\u0435\u0440\u043D\u0443\u044E \u043A\u0438\u0441\u043B\u043E\u0442\u0443, \u0438 \u043F\u043E\u0441\u043B\u0435 \u043D\u0430\u0433\u0440\u0435\u0432\u0430\u043D\u0438\u044F\n\u043E\u0431\u0440\u0430\u0437\u043E\u0432\u0430\u043B\u0441\u044F \u043F\u0440\u043E\u0437\u0440\u0430\u0447\u043D\u044B\u0439 \u0440\u0430\u0441\u0442\u0432\u043E\u0440 \n\u0433\u043E\u043B\u0443\u0431\u043E\u0433\u043E \u0446\u0432\u0435\u0442\u0430.</sm>",
+                    "<sm>\u041F\u0440\u0438 \u0434\u043E\u0431\u0430\u0432\u043B\u0435\u043D\u0438\u0438 \u0432 \u044D\u0442\u043E\u0442 \u0440\u0430\u0441\u0442\u0432\u043E\u0440 \n\u043B\u0435\u0442\u0443\u0447\u0435\u0439 \u0441\u043E\u043B\u0438 \u0430\u043C\u043C\u043E\u043D\u0438\u044F \u0432\u044B\u0434\u0435\u043B\u0438\u043B\u0441\u044F \n\u043E\u0441\u0430\u0434\u043E\u043A \u0447\u0451\u0440\u043D\u043E\u0433\u043E \u0446\u0432\u0435\u0442\u0430 \u0438 \u0440\u0430\u0441\u0442\u0432\u043E\u0440\u0451\u043D\u043D\u0430\u044F \n\u0441\u043E\u043B\u044C, \u043F\u0440\u0438\u043C\u0435\u043D\u044F\u044E\u0449\u0430\u044F\u0441\u044F \u043A\u0430\u043A \n\u0430\u0437\u043E\u0442\u043D\u043E-\u0441\u0435\u0440\u043D\u043E\u0435 \u0443\u0434\u043E\u0431\u0440\u0435\u043D\u0438\u0435.</sm>",
+                    "<md>\u0410 \u0442\u0435\u043F\u0435\u0440\u044C \u043F\u043E\u043F\u0440\u043E\u0431\u0443\u0439 \u0432\u044B\u0431\u0440\u0430\u0442\u044C\n\u043F\u0440\u0430\u0432\u0438\u043B\u044C\u043D\u043E\u0435 \u0443\u0440\u0430\u0432\u043D\u0435\u043D\u0438\u0435 \u0434\u043B\u044F \n\u043F\u0435\u0440\u0432\u043E\u0439 \u0440\u0435\u0430\u043A\u0446\u0438\u0438.</md>"
+                ],
+                answers: [
+                    "<md>CuSO<sub>4</sub> + (NH<sub>4</sub>)<sub>2</sub>S \u2192 CuS\u2193 + (NH<sub>4</sub>)<sub>2</sub>SO<sub>4</sub></md>",
+                    "Ni(NO<sub>3</sub>)<sub>2</sub> \u2192 Ni(NO<sub>2</sub>)<sub>2</sub> + O<sub>2</sub>\u2191",
+                    "CuCO<sub>3</sub> \u2192 CO<sub>2</sub>\u2191 + CuO",
+                    "2Cu(NO<sub>3</sub>)<sub>2</sub> \u2192 2CuO + 4NO<sub>2</sub> + O<sub>2</sub>\u2191",
+                ],
+                rightAnswer: 2,
+            };
+            Q2 = {
+                texts: [
+                    "<md>\u0425\u043E\u0440\u043E\u0448\u043E.\n\u0427\u0442\u043E \u043D\u0430\u0441\u0447\u0451\u0442 \u0432\u044B\u0431\u043E\u0440\u0430 \n\u0432\u0435\u0440\u043D\u043E\u0433\u043E \u0443\u0440\u0430\u0432\u043D\u0435\u043D\u0438\u044F \u0434\u043B\u044F\n\u0440\u0435\u0430\u043A\u0446\u0438\u0438 \u043D\u043E\u043C\u0435\u0440 \u0434\u0432\u0430?</md>",
+                    "<sm>\u0412\u044B\u0434\u0430\u043D\u043D\u0443\u044E \u0441\u043E\u043B\u044C \u2014 \u0431\u0435\u043B\u044B\u0439,\n\u043D\u0435\u0440\u0430\u0441\u0442\u0432\u043E\u0440\u0438\u043C\u044B\u0439 \u0432 \u0432\u043E\u0434\u0435 \u043F\u043E\u0440\u043E\u0448\u043E\u043A \u0441\n\u0437\u0435\u043B\u0435\u043D\u043E\u0432\u0430\u0442\u044B\u043C \u043E\u0442\u0442\u0435\u043D\u043A\u043E\u043C \u2014 \u043F\u043E\u0434\u0432\u0435\u0440\u0433\u0430\u0435\u0442\u0441\u044F\n\u0442\u0435\u0440\u043C\u0438\u0447\u0435\u0441\u043A\u043E\u043C\u0443 \u0440\u0430\u0437\u043B\u043E\u0436\u0435\u043D\u0438\u044E, \u0432\n\u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442\u0435 \u043A\u043E\u0442\u043E\u0440\u043E\u0433\u043E \u043E\u0431\u0440\u0430\u0437\u043E\u0432\u0430\u043B\u043E\u0441\u044C\n\u0434\u0432\u0430 \u043E\u043A\u0441\u0438\u0434\u0430. \u041E\u0434\u0438\u043D \u0438\u0437 \u043D\u0438\u0445\u00A0\u2014 \u0433\u0430\u0437\n\u0431\u0435\u0437 \u0446\u0432\u0435\u0442\u0430 \u0438 \u0437\u0430\u043F\u0430\u0445\u0430, \u0438\u0433\u0440\u0430\u044E\u0449\u0438\u0439\n\u0432\u0430\u0436\u043D\u0443\u044E \u0440\u043E\u043B\u044C \u0432 \u043F\u0440\u043E\u0446\u0435\u0441\u0441\u0435 \u0444\u043E\u0442\u043E\u0441\u0438\u043D\u0442\u0435\u0437\u0430.\n\u0414\u0440\u0443\u0433\u043E\u0439 \u2014 \u043F\u043E\u0440\u043E\u0448\u043E\u043A \u0447\u0451\u0440\u043D\u043E\u0433\u043E \u0446\u0432\u0435\u0442\u0430.</sm>",
+                    "<sm>\u041A \u043F\u043E\u043B\u0443\u0447\u0435\u043D\u043D\u043E\u043C\u0443 \u043E\u043A\u0441\u0438\u0434\u0443 \n\u0447\u0451\u0440\u043D\u043E\u0433\u043E \u0446\u0432\u0435\u0442\u0430 \u0434\u043E\u0431\u0430\u0432\u0438\u043B\u0438 \u0440\u0430\u0437\u0431\u0430\u0432\u043B\u0435\u043D\u043D\u0443\u044E\n\u0441\u0435\u0440\u043D\u0443\u044E \u043A\u0438\u0441\u043B\u043E\u0442\u0443, \u0438 \u043F\u043E\u0441\u043B\u0435 \u043D\u0430\u0433\u0440\u0435\u0432\u0430\u043D\u0438\u044F\n \u043E\u0431\u0440\u0430\u0437\u043E\u0432\u0430\u043B\u0441\u044F \u043F\u0440\u043E\u0437\u0440\u0430\u0447\u043D\u044B\u0439 \u0440\u0430\u0441\u0442\u0432\u043E\u0440 \n \u0433\u043E\u043B\u0443\u0431\u043E\u0433\u043E \u0446\u0432\u0435\u0442\u0430.</sm>",
+                    "<sm>\u041F\u0440\u0438 \u0434\u043E\u0431\u0430\u0432\u043B\u0435\u043D\u0438\u0438 \u0432 \u044D\u0442\u043E\u0442 \u0440\u0430\u0441\u0442\u0432\u043E\u0440 \n\u043B\u0435\u0442\u0443\u0447\u0435\u0439 \u0441\u043E\u043B\u0438 \u0430\u043C\u043C\u043E\u043D\u0438\u044F \u0432\u044B\u0434\u0435\u043B\u0438\u043B\u0441\u044F \n\u043E\u0441\u0430\u0434\u043E\u043A \u0447\u0451\u0440\u043D\u043E\u0433\u043E \u0446\u0432\u0435\u0442\u0430 \u0438 \u0440\u0430\u0441\u0442\u0432\u043E\u0440\u0451\u043D\u043D\u0430\u044F \n\u0441\u043E\u043B\u044C, \u043F\u0440\u0438\u043C\u0435\u043D\u044F\u044E\u0449\u0430\u044F\u0441\u044F \u043A\u0430\u043A \n\u0430\u0437\u043E\u0442\u043D\u043E-\u0441\u0435\u0440\u043D\u043E\u0435 \u0443\u0434\u043E\u0431\u0440\u0435\u043D\u0438\u0435.</sm>",
+                ],
+                answers: [
+                    "CuO + H<sub>2</sub>SO<sub>4</sub> \u2192 CuSO<sub>4</sub> + H<sub>2</sub>O",
+                    "Ni + 2H<sub>2</sub>SO<sub>4</sub> \u2192 NiSO<sub>4</sub> + SO<sub>2</sub> + 2H<sub>2</sub>O",
+                    "2Cu + 4HCl + O<sub>2</sub> \u2192 2CuCl<sub>2</sub> + 2H<sub>2</sub>O",
+                    "Cu(OH)<sub>2</sub> + 2NaOH \u2192 Na<sub>2</sub>[Cu(OH)<sub>4</sub>]",
+                ],
+                rightAnswer: 0,
+            };
+            Q3 = {
+                texts: [
+                    "<md>\u0422\u0430\u043A, \u0430 \u0442\u0435\u043F\u0435\u0440\u044C \u0434\u043B\u044F \n\u0442\u0440\u0435\u0442\u044C\u0435\u0439 \u0440\u0435\u0430\u043A\u0446\u0438\u0438!</md>",
+                    "<sm>\u0412\u044B\u0434\u0430\u043D\u043D\u0443\u044E \u0441\u043E\u043B\u044C \u2014 \u0431\u0435\u043B\u044B\u0439,\n\u043D\u0435\u0440\u0430\u0441\u0442\u0432\u043E\u0440\u0438\u043C\u044B\u0439 \u0432 \u0432\u043E\u0434\u0435 \u043F\u043E\u0440\u043E\u0448\u043E\u043A \u0441\n\u0437\u0435\u043B\u0435\u043D\u043E\u0432\u0430\u0442\u044B\u043C \u043E\u0442\u0442\u0435\u043D\u043A\u043E\u043C \u2014 \u043F\u043E\u0434\u0432\u0435\u0440\u0433\u0430\u0435\u0442\u0441\u044F\n\u0442\u0435\u0440\u043C\u0438\u0447\u0435\u0441\u043A\u043E\u043C\u0443 \u0440\u0430\u0437\u043B\u043E\u0436\u0435\u043D\u0438\u044E, \u0432\n\u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442\u0435 \u043A\u043E\u0442\u043E\u0440\u043E\u0433\u043E \u043E\u0431\u0440\u0430\u0437\u043E\u0432\u0430\u043B\u043E\u0441\u044C\n\u0434\u0432\u0430 \u043E\u043A\u0441\u0438\u0434\u0430. \u041E\u0434\u0438\u043D \u0438\u0437 \u043D\u0438\u0445\u00A0\u2014 \u0433\u0430\u0437\n\u0431\u0435\u0437 \u0446\u0432\u0435\u0442\u0430 \u0438 \u0437\u0430\u043F\u0430\u0445\u0430, \u0438\u0433\u0440\u0430\u044E\u0449\u0438\u0439\n\u0432\u0430\u0436\u043D\u0443\u044E \u0440\u043E\u043B\u044C \u0432 \u043F\u0440\u043E\u0446\u0435\u0441\u0441\u0435 \u0444\u043E\u0442\u043E\u0441\u0438\u043D\u0442\u0435\u0437\u0430.\n\u0414\u0440\u0443\u0433\u043E\u0439 \u2014 \u043F\u043E\u0440\u043E\u0448\u043E\u043A \u0447\u0451\u0440\u043D\u043E\u0433\u043E \u0446\u0432\u0435\u0442\u0430.</sm>",
+                    "<sm>\u041A \u043F\u043E\u043B\u0443\u0447\u0435\u043D\u043D\u043E\u043C\u0443 \u043E\u043A\u0441\u0438\u0434\u0443 \n\u0447\u0451\u0440\u043D\u043E\u0433\u043E \u0446\u0432\u0435\u0442\u0430 \u0434\u043E\u0431\u0430\u0432\u0438\u043B\u0438 \u0440\u0430\u0437\u0431\u0430\u0432\u043B\u0435\u043D\u043D\u0443\u044E\n\u0441\u0435\u0440\u043D\u0443\u044E \u043A\u0438\u0441\u043B\u043E\u0442\u0443, \u0438 \u043F\u043E\u0441\u043B\u0435 \u043D\u0430\u0433\u0440\u0435\u0432\u0430\u043D\u0438\u044F\n \u043E\u0431\u0440\u0430\u0437\u043E\u0432\u0430\u043B\u0441\u044F \u043F\u0440\u043E\u0437\u0440\u0430\u0447\u043D\u044B\u0439 \u0440\u0430\u0441\u0442\u0432\u043E\u0440 \n \u0433\u043E\u043B\u0443\u0431\u043E\u0433\u043E \u0446\u0432\u0435\u0442\u0430.</sm>",
+                    "<sm>\u041F\u0440\u0438 \u0434\u043E\u0431\u0430\u0432\u043B\u0435\u043D\u0438\u0438 \u0432 \u044D\u0442\u043E\u0442 \u0440\u0430\u0441\u0442\u0432\u043E\u0440 \n\u043B\u0435\u0442\u0443\u0447\u0435\u0439 \u0441\u043E\u043B\u0438 \u0430\u043C\u043C\u043E\u043D\u0438\u044F \u0432\u044B\u0434\u0435\u043B\u0438\u043B\u0441\u044F \n\u043E\u0441\u0430\u0434\u043E\u043A \u0447\u0451\u0440\u043D\u043E\u0433\u043E \u0446\u0432\u0435\u0442\u0430 \u0438 \u0440\u0430\u0441\u0442\u0432\u043E\u0440\u0451\u043D\u043D\u0430\u044F \n\u0441\u043E\u043B\u044C, \u043F\u0440\u0438\u043C\u0435\u043D\u044F\u044E\u0449\u0430\u044F\u0441\u044F \u043A\u0430\u043A \n\u0430\u0437\u043E\u0442\u043D\u043E-\u0441\u0435\u0440\u043D\u043E\u0435 \u0443\u0434\u043E\u0431\u0440\u0435\u043D\u0438\u0435.</sm>",
+                ],
+                answers: [
+                    "CuSO<sub>4</sub> + BaCl<sub>2</sub> \u2192 CuCl<sub>2</sub> + BaSO<sub>4</sub>",
+                    "CuSO<sub>4</sub> + Zn \u2192 Cu\u2193 + ZnSO<sub>4</sub>",
+                    "CuO + H<sub>2</sub>SO<sub>4</sub> \u2192 CuSO<sub>4</sub> + H<sub>2</sub>O",
+                    "CuSO<sub>4</sub> + (NH<sub>4</sub>)<sub>2</sub>S \u2192 CuS\u2193 +(NH<sub>4</sub>)<sub>2</sub>SO<sub>4</sub> ",
+                ],
+                rightAnswer: 3,
+            };
+            exports_4("QUESTIONS", QUESTIONS = [Q1, Q2, Q3]);
         }
-        return btns;
-    }
-    function makeQuizUi() {
-        var s = new pixi_js_3.Container();
-        var buttons = makeButtons(TEXTS);
-        buttons.y = 81;
-        s.addChild(buttons);
-        return s;
-    }
+    };
+});
+System.register("irka/states/quiz", ["pixi.js", "irka/multystyle-text", "irka/utils", "irka/questions"], function (exports_5, context_5) {
+    "use strict";
+    var __moduleName = context_5 && context_5.id;
     function makeQuiz(app) {
-        var container = new pixi_js_3.Container();
-        var bg = new pixi_js_3.Sprite(new pixi_js_3.Texture(pixi_js_3.utils.TextureCache['lvl/test_bgr.png']));
-        container.addChild(bg);
-        var quizUi = makeQuizUi();
-        container.addChild(quizUi);
-        return container;
+        var quiz = new QuizUi(app);
+        quiz.loadQuestions(questions_1.QUESTIONS);
+        return quiz.container;
     }
-    exports_4("makeQuiz", makeQuiz);
-    var pixi_js_3, multystyle_text_1, utils_2, W, H, P, RA, DA, UA, TEXTS;
+    exports_5("makeQuiz", makeQuiz);
+    var pixi_js_3, multystyle_text_1, utils_2, questions_1, W, H, P, RA, DA, UA, IrkaDialogBox, AnswerButton, QuizUi;
     return {
         setters: [
             function (pixi_js_3_1) {
@@ -846,6 +849,9 @@ System.register("irka/states/quiz", ["pixi.js", "irka/multystyle-text", "irka/ut
             },
             function (utils_2_1) {
                 utils_2 = utils_2_1;
+            },
+            function (questions_1_1) {
+                questions_1 = questions_1_1;
             }
         ],
         execute: function () {
@@ -855,18 +861,356 @@ System.register("irka/states/quiz", ["pixi.js", "irka/multystyle-text", "irka/ut
             RA = '→';
             DA = '↓';
             UA = '↑';
-            TEXTS = [
-                "CuSO<sub>4</sub> + (NH<sub>4</sub>)<sub>2</sub>S \u2192 CuS\u2193 + (NH<sub>4</sub>)<sub>2</sub>SO<sub>4</sub>",
-                "Ni(NO<sub>3</sub>)<sub>2</sub> \u2192 Ni(NO<sub>2</sub>)<sub>2</sub> + O<sub>2</sub>\u2191",
-                "CuCO<sub>3</sub> \u2192 CO<sub>2</sub>\u2191 + CuO",
-                "2Cu(NO<sub>3</sub>)<sub>2</sub> \u2192 2CuO + 4NO<sub>2</sub> + O<sub>2</sub>\u2191",
-            ];
+            IrkaDialogBox = /** @class */ (function () {
+                function IrkaDialogBox(texts) {
+                    if (texts === void 0) { texts = []; }
+                    var _this = this;
+                    this.texts = texts;
+                    this.container = new pixi_js_3.Container();
+                    var rect = new pixi_js_3.Graphics();
+                    rect.beginFill(0xffffff);
+                    rect.drawRect(0, 0, 250, 250);
+                    rect.endFill();
+                    this.container.addChild(rect);
+                    this.currentText = new multystyle_text_1.default(texts[0], utils_2.mstStyles);
+                    this.currentText.x = 5;
+                    this.currentText.y = 5;
+                    this.currentIdx = 0;
+                    this.container.interactive = true;
+                    this.container.buttonMode = true;
+                    this.container.addChild(this.currentText);
+                    this.container.on('pointerdown', function () { return _this.showNextMessage(); });
+                }
+                IrkaDialogBox.prototype.loadTexts = function (texts) {
+                    this.texts = texts;
+                    this.currentText.text = texts[0];
+                    this.currentIdx = 0;
+                };
+                IrkaDialogBox.prototype.showText = function (text) {
+                    this.currentText.text = text;
+                };
+                IrkaDialogBox.prototype.showNextMessage = function () {
+                    this.currentIdx++;
+                    if (this.currentIdx < this.texts.length) {
+                        this.showText(this.texts[this.currentIdx]);
+                    }
+                    else {
+                        this.retry();
+                    }
+                };
+                IrkaDialogBox.prototype.retry = function () {
+                    this.currentIdx = -1;
+                    this.showNextMessage();
+                };
+                return IrkaDialogBox;
+            }());
+            AnswerButton = /** @class */ (function () {
+                function AnswerButton(text) {
+                    if (text === void 0) { text = ''; }
+                    this.container = new pixi_js_3.Container();
+                    this.msText = new multystyle_text_1.default('', utils_2.mstStyles);
+                    this.initUi();
+                    this.setText(text);
+                }
+                AnswerButton.prototype.setText = function (text) {
+                    // console.log('set text')
+                    this.msText.text = text;
+                    this.msText.x = W / 2 - this.msText.width / 2;
+                    this.msText.y = H / 2 - this.msText.height / 2;
+                };
+                AnswerButton.prototype.initUi = function () {
+                    this.container.interactive = true;
+                    this.container.buttonMode = true;
+                    this.container.height = W;
+                    this.container.width = H;
+                    var defaultButton = new pixi_js_3.Graphics();
+                    defaultButton.lineStyle(1, 0x0AB4B4);
+                    defaultButton.beginFill(0xffffff);
+                    defaultButton.drawRect(0, 0, W, H);
+                    defaultButton.endFill();
+                    var selectedButton = new pixi_js_3.Graphics();
+                    selectedButton.lineStyle(1, 0x0AB4B4);
+                    selectedButton.beginFill(0x54D1E4);
+                    selectedButton.drawRect(0, 0, W, H);
+                    selectedButton.endFill();
+                    selectedButton.visible = false;
+                    this.container.addChild(defaultButton);
+                    this.container.addChild(selectedButton);
+                    this.container.addChild(this.msText);
+                    this.container.on('pointerover', function () {
+                        defaultButton.visible = false;
+                        selectedButton.visible = true;
+                    });
+                    this.container.on('pointerout', function () {
+                        selectedButton.visible = false;
+                        defaultButton.visible = true;
+                    });
+                };
+                return AnswerButton;
+            }());
+            // function makeAnswerButtons(texts: string[]): Container {
+            //     function makeButton(text: string): Container {
+            //         const btn = new Container();
+            //         btn.interactive = true;
+            //         btn.buttonMode = true;
+            //         btn.height = W;
+            //         btn.width = H;
+            //
+            //         const defaultButton = new Graphics();
+            //         defaultButton.lineStyle(1, 0x0AB4B4);
+            //         defaultButton.beginFill(0xffffff);
+            //         defaultButton.drawRect(0, 0, W, H);
+            //         defaultButton.endFill();
+            //
+            //         const selectedButton = new Graphics();
+            //         selectedButton.lineStyle(1, 0x0AB4B4);
+            //         selectedButton.beginFill(0x54D1E4);
+            //         selectedButton.drawRect(0, 0, W, H);
+            //         selectedButton.endFill();
+            //         selectedButton.visible = false;
+            //
+            //         const msText = new MultiStyleText(text, mstStyles);
+            //         msText.x = W / 2 - msText.width / 2;
+            //         msText.y = H / 2 - msText.height / 2;
+            //
+            //         btn.addChild(defaultButton);
+            //         btn.addChild(selectedButton);
+            //         btn.addChild(msText);
+            //
+            //         btn.on('pointerover', () => {
+            //             defaultButton.visible = false;
+            //             selectedButton.visible = true;
+            //         });
+            //         btn.on('pointerout', () => {
+            //             selectedButton.visible = false;
+            //             defaultButton.visible = true;
+            //         });
+            //
+            //         return btn;
+            //     }
+            //
+            //     const buttons = new Container();
+            //
+            //     const bg = new Graphics();
+            //     bg.beginFill(0x98ECFF);
+            //     bg.drawRect(0, 0, W + P * 2, P + texts.length * (H + P));
+            //     bg.endFill();
+            //
+            //     buttons.addChild(bg);
+            //
+            //     for (let i = 0; i < texts.length; ++i) {
+            //         let btn = makeButton(texts[i]);
+            //         btn.x = P;
+            //         btn.y = P + i * (H + P);
+            //         buttons.addChild(btn);
+            //     }
+            //     return buttons;
+            // }
+            //
+            // function makeInterfaceButtons(): Container {
+            //     const buttons = new Container();
+            //
+            //     function makeInterfaceButton(texture: string, x: number, y: number): Container {
+            //         const btn = new Sprite(utils.TextureCache[texture]);
+            //         btn.interactive = true;
+            //         btn.buttonMode = true;
+            //         btn.x = x;
+            //         btn.y = y;
+            //         buttons.addChild(btn);
+            //         return btn;
+            //     }
+            //
+            //     const exitButton = makeInterfaceButton('interface/interface_exit.png', 36, 36);
+            //     const retryButton = makeInterfaceButton('interface/interface_retry.png', 0, 0);
+            //     const explainButton = makeInterfaceButton('interface/interface_explain.png', 36, 0);
+            //     const howtoButton = makeInterfaceButton('interface/interface_howto.png', 0, 36);
+            //
+            //     exitButton.on('pointerdown', () => buttons.emit('quizExit'));
+            //     retryButton.on('pointerdown', () => buttons.emit('quizRetry'));
+            //     explainButton.on('pointerdown', () => buttons.emit('quizExplain'));
+            //     howtoButton.on('pointerdown', () => buttons.emit('quizHowto'));
+            //
+            //     return buttons;
+            // }
+            //
+            //
+            //
+            // function makeQuizUi(questions: Question[]): Container {
+            //     const ui = new Container();
+            //
+            //     function makeQuestionUi(question: Question): Container {
+            //         const questionUi = new Container();
+            //
+            //         const answers = makeAnswerButtons(question.answers);
+            //         answers.y = 81;
+            //         questionUi.addChild(answers);
+            //
+            //         const dialog = new IrkaDialogBox(question.texts);
+            //         dialog.container.x = 370;
+            //         dialog.container.y = 10;
+            //         questionUi.addChild(dialog.container);
+            //
+            //         questionUi.visible = false;
+            //         ui.addChild(questionUi);
+            //         return questionUi;
+            //     }
+            //
+            //     const interfaceButtons = makeInterfaceButtons();
+            //     interfaceButtons.x = 370;
+            //     interfaceButtons.y = 270;
+            //     ui.addChild(interfaceButtons);
+            //
+            //     interfaceButtons.on('quizExit', () => ui.emit('quizExit'));
+            //
+            //     const qs = questions.map(makeQuestionUi);
+            //     qs[0].visible = true;
+            //
+            //     return ui;
+            // }
+            QuizUi = /** @class */ (function () {
+                function QuizUi(app) {
+                    this.app = app;
+                    this.container = new pixi_js_3.Container();
+                    this.interfaceButtons = new pixi_js_3.Container();
+                    this.dialog = new IrkaDialogBox();
+                    this.answerButtons = new pixi_js_3.Container();
+                    this.buttons = [];
+                    this.initUi();
+                }
+                QuizUi.prototype.loadQuestions = function (questions) {
+                    this.questions = questions;
+                    this.currentQuestionIdx = 0;
+                    this.loadQuestion(questions[0]);
+                };
+                QuizUi.prototype.initUi = function () {
+                    var _this = this;
+                    var bg = new pixi_js_3.Sprite(new pixi_js_3.Texture(pixi_js_3.utils.TextureCache['lvl/test_bgr.png']));
+                    this.container.addChild(bg);
+                    this.irkaNarr = pixi_js_3.utils.TextureCache['lvl/irka_narrative/1 - irka_narr.png'];
+                    this.irkaGlad = pixi_js_3.utils.TextureCache['lvl/glad_irka/4 - irka_glad.png'];
+                    this.irkaSad = pixi_js_3.utils.TextureCache['lvl/sad_irka/4 - irka_sad.png'];
+                    this.irka = new pixi_js_3.Sprite(this.irkaNarr);
+                    // this.irka.texture = this.irkaNarr;
+                    this.interfaceButtons.x = 370;
+                    this.interfaceButtons.y = 270;
+                    this.dialog.container.x = 370;
+                    this.dialog.container.y = 10;
+                    this.irka.x = 420;
+                    this.irka.y = 280;
+                    var makeInterfaceButton = function (texture, x, y) {
+                        var btn = new pixi_js_3.Sprite(pixi_js_3.utils.TextureCache[texture]);
+                        btn.interactive = true;
+                        btn.buttonMode = true;
+                        btn.x = x;
+                        btn.y = y;
+                        _this.interfaceButtons.addChild(btn);
+                        return btn;
+                    };
+                    var exitButton = makeInterfaceButton('interface/interface_exit.png', 36, 36);
+                    var retryButton = makeInterfaceButton('interface/interface_retry.png', 0, 0);
+                    var explainButton = makeInterfaceButton('interface/interface_explain.png', 36, 0);
+                    var howtoButton = makeInterfaceButton('interface/interface_howto.png', 0, 36);
+                    exitButton.on('pointerdown', function () { return _this.onExit(); });
+                    retryButton.on('pointerdown', function () { return _this.retry(); });
+                    // explainButton.on('pointerdown', () => buttons.emit('quizExplain'));
+                    // howtoButton.on('pointerdown', () => buttons.emit('quizHowto'));
+                    this.container.addChild(this.irka);
+                    this.container.addChild(this.interfaceButtons);
+                    this.container.addChild(this.dialog.container);
+                    this.makeAnswersButtons();
+                    this.container.addChild(this.answerButtons);
+                };
+                QuizUi.prototype.onExit = function () {
+                    this.reset();
+                    this.app.stage.emit('quizExit');
+                };
+                QuizUi.prototype.retry = function () {
+                    this.dialog.retry();
+                };
+                QuizUi.prototype.answer = function (n) {
+                    var _this = this;
+                    if (this.currentQuestion.rightAnswer === n) {
+                        this.irka.texture = this.irkaGlad;
+                        this.dialog.showText('Правильно!\nКакой ты молодец');
+                        this.buttons.forEach(function (b) { return b.container.interactive = false; });
+                        this.container.interactive = true;
+                        this.container.once('pointerdown', function () {
+                            _this.irka.texture = _this.irkaNarr;
+                            _this.container.interactive = false;
+                            _this.buttons.forEach(function (b) { return b.container.interactive = true; });
+                            _this.loadNextQuestion();
+                        });
+                    }
+                    else {
+                        this.irka.texture = this.irkaSad;
+                        this.dialog.showText('Ты уверен?\nМне кажется, тут\nкакая-то ошибка');
+                        this.buttons.forEach(function (b) { return b.container.interactive = false; });
+                        this.container.interactive = true;
+                        this.container.once('pointerdown', function () {
+                            _this.irka.texture = _this.irkaNarr;
+                            _this.buttons.forEach(function (b) { return b.container.interactive = true; });
+                            _this.dialog.retry();
+                            _this.container.interactive = false;
+                        });
+                    }
+                };
+                QuizUi.prototype.loadNextQuestion = function () {
+                    var _this = this;
+                    this.currentQuestionIdx++;
+                    if (this.currentQuestionIdx < this.questions.length) {
+                        this.loadQuestion(this.questions[this.currentQuestionIdx]);
+                    }
+                    else {
+                        this.dialog.showText('Ты ответил на все\nвопросы');
+                        this.container.interactive = true;
+                        this.container.once('pointerdown', function () {
+                            _this.reset();
+                            _this.container.interactive = false;
+                        });
+                    }
+                };
+                QuizUi.prototype.loadQuestion = function (question) {
+                    this.currentQuestion = question;
+                    this.dialog.loadTexts(question.texts);
+                    for (var i = 0; i < 4; ++i) {
+                        this.buttons[i].setText(question.answers[i]);
+                    }
+                };
+                QuizUi.prototype.reset = function () {
+                    this.irka.texture = this.irkaNarr;
+                    this.currentQuestionIdx = -1;
+                    this.loadQuestion(this.questions[0]);
+                };
+                QuizUi.prototype.makeAnswersButtons = function () {
+                    // this.buttons = new Container();
+                    var _this = this;
+                    var bg = new pixi_js_3.Graphics();
+                    bg.beginFill(0x98ECFF);
+                    bg.drawRect(0, 0, W + P * 2, P + 4 * (H + P));
+                    bg.endFill();
+                    this.answerButtons.addChild(bg);
+                    this.answerButtons.y = 81;
+                    var _loop_1 = function (i) {
+                        var btn = new AnswerButton('');
+                        btn.container.x = P;
+                        btn.container.y = P + i * (H + P);
+                        btn.container.on('pointerdown', function () { return _this.answer(i); });
+                        this_1.buttons.push(btn);
+                        this_1.answerButtons.addChild(btn.container);
+                    };
+                    var this_1 = this;
+                    for (var i = 0; i < 4; ++i) {
+                        _loop_1(i);
+                    }
+                };
+                return QuizUi;
+            }());
         }
     };
 });
-System.register("irka/game", ["pixi.js", "irka/states/menu", "irka/states/quiz"], function (exports_5, context_5) {
+System.register("irka/game", ["pixi.js", "irka/states/menu", "irka/states/quiz"], function (exports_6, context_6) {
     "use strict";
-    var __moduleName = context_5 && context_5.id;
+    var __moduleName = context_6 && context_6.id;
     function setupRenderer(app) {
         app.renderer.view.style.display = "block";
         app.renderer.autoResize = true;
@@ -883,6 +1227,10 @@ System.register("irka/game", ["pixi.js", "irka/states/menu", "irka/states/quiz"]
             menu.visible = false;
             quiz.visible = true;
         });
+        app.stage.on('quizExit', function () {
+            quiz.visible = false;
+            menu.visible = true;
+        });
         app.stage.addChild(menu);
         app.stage.addChild(quiz);
     }
@@ -898,7 +1246,7 @@ System.register("irka/game", ["pixi.js", "irka/states/menu", "irka/states/quiz"]
             .load(function () { return setup(app); });
         return app;
     }
-    exports_5("init", init);
+    exports_6("init", init);
     var pixi_js_4, menu_1, quiz_1;
     return {
         setters: [
@@ -916,9 +1264,9 @@ System.register("irka/game", ["pixi.js", "irka/states/menu", "irka/states/quiz"]
         }
     };
 });
-System.register("index", ["irka/game"], function (exports_6, context_6) {
+System.register("index", ["irka/game"], function (exports_7, context_7) {
     "use strict";
-    var __moduleName = context_6 && context_6.id;
+    var __moduleName = context_7 && context_7.id;
     var game_1, app;
     return {
         setters: [

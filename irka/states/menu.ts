@@ -7,7 +7,7 @@ function makeQuizButton(): Container {
     const quizArea = new Sprite(utils.TextureCache['menu/mm_02.png']);
     const text = makeTextBox(new Text('Начать\nхимический\nтест', smallCenteredText));
 
-    text.alpha = 0;
+    text.visible = false;
     quiz.addChild(quizArea);
     quiz.buttonMode = true;
     quiz.interactive = true;
@@ -18,14 +18,16 @@ function makeQuizButton(): Container {
 
     const onPointerOver = () => {
         quizArea.filters = [darkFilter];
-        text.alpha = 1;
+        text.visible = true;
 
     };
     const onPointerOut = () => {
         quizArea.filters = [];
-        text.alpha = 0;
+        text.visible = false;
     };
     const onPointerDown = () => {
+        quizArea.filters = [];
+        text.visible = false;
         quiz.emit('startQuiz');
     };
 

@@ -23,6 +23,11 @@ function setup(app: Application) {
         quiz.visible = true;
     });
 
+    app.stage.on('quizExit', () => {
+        quiz.visible = false;
+        menu.visible = true;
+    });
+
     app.stage.addChild(menu);
     app.stage.addChild(quiz);
 }

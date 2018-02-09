@@ -51,8 +51,11 @@ export const mstStyles = {
         textBaseline: 'bottom',
         valign: -4
     },
+    'md': {
+        fontSize: '13px',
+    },
     'sm': {
-        fontSize: '10px',
+        fontSize: '9px',
     },
     'center': {
         align: 'center',
