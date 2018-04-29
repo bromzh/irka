@@ -26,7 +26,6 @@ export default class Quiz extends cc.Component {
 
     start() {
         this.toggleContainer.toggleItems.forEach(e => {
-            // e.node.on(cc.Node.EventType.MOUSE_DOWN, () => this.irka.getComponent(cc.Animation).play(e.node.name));
             e.node.on(cc.Node.EventType.TOUCH_START, () => this.irka.getComponent(cc.Animation).play(e.node.name));
         });
 
@@ -48,7 +47,6 @@ export default class Quiz extends cc.Component {
             }
         }
 
-        // torch.on(cc.Node.EventType.MOUSE_DOWN, () => changeLiquidColor());
         torch.on(cc.Node.EventType.TOUCH_START, () => changeLiquidColor());
     }
 
