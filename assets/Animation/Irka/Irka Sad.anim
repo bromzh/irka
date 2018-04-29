@@ -1,0 +1,49 @@
+{
+  "__type__": "cc.AnimationClip",
+  "_name": "Irka Sad",
+  "_objFlags": 0,
+  "_rawFiles": null,
+  "_duration": 0.15,
+  "sample": 60,
+  "speed": 0.5,
+  "wrapMode": 1,
+  "curveData": {
+    "comps": {
+      "cc.Sprite": {
+        "spriteFrame": [
+          {
+            "frame": 0,
+            "value": {
+              "__uuid__": "ae88a3c0-0aff-43e1-9803-4e1ca9ec0a16"
+            }
+          },
+          {
+            "frame": 0.016666666666666666,
+            "value": {
+              "__uuid__": "988d8bc0-73cf-4ee8-805a-7c5803245661"
+            }
+          },
+          {
+            "frame": 0.05,
+            "value": {
+              "__uuid__": "ceebcedb-0103-4b3f-bb37-d8ba9108944b"
+            }
+          },
+          {
+            "frame": 0.11666666666666667,
+            "value": {
+              "__uuid__": "9bb5da22-77c2-458c-b469-49f1742d3f2e"
+            }
+          },
+          {
+            "frame": 0.13333333333333333,
+            "value": {
+              "__uuid__": "0cc1aed3-d219-4584-bd0a-774228cd87cc"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "events": []
+}

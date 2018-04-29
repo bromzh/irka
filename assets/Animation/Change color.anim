@@ -1,0 +1,43 @@
+{
+  "__type__": "cc.AnimationClip",
+  "_name": "Change color",
+  "_objFlags": 0,
+  "_rawFiles": null,
+  "_duration": 1,
+  "sample": 60,
+  "speed": 1,
+  "wrapMode": 1,
+  "curveData": {
+    "props": {
+      "color": [
+        {
+          "frame": 0,
+          "value": {
+            "__type__": "cc.Color",
+            "r": 252,
+            "g": 252,
+            "b": 252,
+            "a": 255
+          }
+        },
+        {
+          "frame": 1,
+          "value": {
+            "__type__": "cc.Color",
+            "r": 0,
+            "g": 0,
+            "b": 0,
+            "a": 255
+          }
+        }
+      ]
+    }
+  },
+  "events": [
+    {
+      "frame": 1,
+      "func": "onAnimCompleted",
+      "params": []
+    }
+  ]
+}

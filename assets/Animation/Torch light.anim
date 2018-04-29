@@ -1,0 +1,31 @@
+{
+  "__type__": "cc.AnimationClip",
+  "_name": "Torch light",
+  "_objFlags": 0,
+  "_rawFiles": null,
+  "_duration": 0.03333333333333333,
+  "sample": 60,
+  "speed": 0.1,
+  "wrapMode": 2,
+  "curveData": {
+    "comps": {
+      "cc.Sprite": {
+        "spriteFrame": [
+          {
+            "frame": 0,
+            "value": {
+              "__uuid__": "fb82e865-d939-46f3-82b4-497861d867d3"
+            }
+          },
+          {
+            "frame": 0.016666666666666666,
+            "value": {
+              "__uuid__": "89ac4206-4314-4f14-867b-08a112d884b0"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "events": []
+}

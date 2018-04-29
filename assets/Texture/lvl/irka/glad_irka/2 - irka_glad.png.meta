@@ -1,0 +1,30 @@
+{
+  "ver": "1.0.0",
+  "uuid": "a95ef138-d406-4e35-968e-7da129b4c7ad",
+  "type": "sprite",
+  "wrapMode": "clamp",
+  "filterMode": "bilinear",
+  "subMetas": {
+    "2 - irka_glad": {
+      "ver": "1.0.3",
+      "uuid": "ff21f22f-3234-4729-8387-208f33467d80",
+      "rawTextureUuid": "a95ef138-d406-4e35-968e-7da129b4c7ad",
+      "trimType": "auto",
+      "trimThreshold": 1,
+      "rotated": false,
+      "offsetX": 0,
+      "offsetY": -12,
+      "trimX": 0,
+      "trimY": 24,
+      "width": 216,
+      "height": 370,
+      "rawWidth": 216,
+      "rawHeight": 394,
+      "borderTop": 0,
+      "borderBottom": 0,
+      "borderLeft": 0,
+      "borderRight": 0,
+      "subMetas": {}
+    }
+  }
+}

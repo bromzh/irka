@@ -1,0 +1,55 @@
+{
+  "__type__": "cc.AnimationClip",
+  "_name": "Irka Narr Alt",
+  "_objFlags": 0,
+  "_rawFiles": null,
+  "_duration": 1,
+  "sample": 60,
+  "speed": 0.5,
+  "wrapMode": 2,
+  "curveData": {
+    "comps": {
+      "cc.Sprite": {
+        "spriteFrame": [
+          {
+            "frame": 0,
+            "value": {
+              "__uuid__": "85c0d60e-d0f9-4302-ae02-c6247c09687c"
+            }
+          },
+          {
+            "frame": 0.016666666666666666,
+            "value": {
+              "__uuid__": "be6e6c93-2512-4f5c-95e0-ee3af4744bc9"
+            }
+          },
+          {
+            "frame": 0.03333333333333333,
+            "value": {
+              "__uuid__": "b894236f-eeac-4eb9-8146-f04ff8dc02ba"
+            }
+          },
+          {
+            "frame": 0.06666666666666667,
+            "value": {
+              "__uuid__": "be6e6c93-2512-4f5c-95e0-ee3af4744bc9"
+            }
+          },
+          {
+            "frame": 0.1,
+            "value": {
+              "__uuid__": "85c0d60e-d0f9-4302-ae02-c6247c09687c"
+            }
+          },
+          {
+            "frame": 0.9833333333333333,
+            "value": {
+              "__uuid__": "85c0d60e-d0f9-4302-ae02-c6247c09687c"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "events": []
+}

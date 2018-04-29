@@ -1,0 +1,30 @@
+{
+  "ver": "1.0.0",
+  "uuid": "16712901-b640-480d-9527-e142c9c937c0",
+  "type": "sprite",
+  "wrapMode": "clamp",
+  "filterMode": "bilinear",
+  "subMetas": {
+    "osadok_light": {
+      "ver": "1.0.3",
+      "uuid": "82034633-4c5c-4643-9889-033e11b29e65",
+      "rawTextureUuid": "16712901-b640-480d-9527-e142c9c937c0",
+      "trimType": "auto",
+      "trimThreshold": 1,
+      "rotated": false,
+      "offsetX": 0,
+      "offsetY": 0,
+      "trimX": 0,
+      "trimY": 0,
+      "width": 43,
+      "height": 8,
+      "rawWidth": 43,
+      "rawHeight": 8,
+      "borderTop": 0,
+      "borderBottom": 0,
+      "borderLeft": 0,
+      "borderRight": 0,
+      "subMetas": {}
+    }
+  }
+}

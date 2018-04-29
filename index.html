@@ -1,36 +1,12 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-    <title>Ирка Пробиркина</title>
-    <style>
-        @font-face {
-            font-family: "DPix";
-            src: url("res/Dpix_8pt.ttf"),
-            url("res/dpix_8pt-webfont.woff") format('woff'),
-            url("res/dpix_8pt-webfont.woff2") format('woff2');
-        }
-        * {
-            padding: 0;
-            margin: 0;
-            font-family: 'DPix', serif;
-        }
-        canvas {
-            margin: 0 auto;
-            font-family: 'DPix', serif;
-        }
-    </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Irka Probirkina</title>
 </head>
 <body>
-    <script src="libs/system.js"></script>
-    <script src="index.js"></script>
-    <script>
-        System.defaultJSExtensions = true;
-        System.config({
-            map: {
-                'pixi.js': 'libs/pixi.js',
-            },
-        });
-        System.import('index').then(null, console.error.bind(console));
-    </script>
+    <a href="./build/web-mobile/">Play</a>
 </body>
-<div>***</div><!--TODO без этого не работает шрифт в канвасе -->
 </html>

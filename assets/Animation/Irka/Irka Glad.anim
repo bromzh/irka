@@ -1,0 +1,43 @@
+{
+  "__type__": "cc.AnimationClip",
+  "_name": "Irka glad",
+  "_objFlags": 0,
+  "_rawFiles": null,
+  "_duration": 0.06666666666666667,
+  "sample": 60,
+  "speed": 0.75,
+  "wrapMode": 1,
+  "curveData": {
+    "comps": {
+      "cc.Sprite": {
+        "spriteFrame": [
+          {
+            "frame": 0,
+            "value": {
+              "__uuid__": "27d413b5-c2f9-40f1-bc3e-d4e3ded74f36"
+            }
+          },
+          {
+            "frame": 0.016666666666666666,
+            "value": {
+              "__uuid__": "ff21f22f-3234-4729-8387-208f33467d80"
+            }
+          },
+          {
+            "frame": 0.03333333333333333,
+            "value": {
+              "__uuid__": "d4000daf-bc0d-484e-aa7f-b5629f0bb4cf"
+            }
+          },
+          {
+            "frame": 0.05,
+            "value": {
+              "__uuid__": "b4b128d4-7544-45b3-96e3-ad3e32ee9532"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "events": []
+}
