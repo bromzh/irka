@@ -26,11 +26,8 @@ export default class Quiz extends cc.Component {
 
     start() {
         this.toggleContainer.toggleItems.forEach(e => {
-            e.node.on(cc.Node.EventType.MOUSE_DOWN, () => {
-                this.irka.getComponent(cc.Animation).play(e.node.name);
-                // this.irka.getComponent(cc.Sprite).
-                // console.log(this.irka.getComponent(cc.Animation));
-            })
+            e.node.on(cc.Node.EventType.MOUSE_DOWN, () => this.irka.getComponent(cc.Animation).play(e.node.name));
+            e.node.on(cc.Node.EventType.TOUCH_START, () => this.irka.getComponent(cc.Animation).play(e.node.name));
         });
 
         const flask1 = this.addFlask(-150, -150, new cc.Color(128, 255, 0));
@@ -39,7 +36,7 @@ export default class Quiz extends cc.Component {
         const torch = this.addTorch();
         const torchCmp = torch.getComponent(Torch);
 
-        torch.on(cc.Node.EventType.MOUSE_DOWN, () => {
+        const changeLiquidColor = () => {
             if (!torchCmp.isActive) {
                 const r = Math.round(Math.random() * 255);
                 const g = Math.round(Math.random() * 255);
@@ -49,7 +46,10 @@ export default class Quiz extends cc.Component {
 
                 flaskCmp.changeColor(flaskCmp.staffColor, newColor, 1);
             }
-        });
+        }
+
+        torch.on(cc.Node.EventType.MOUSE_DOWN, () => changeLiquidColor());
+        torch.on(cc.Node.EventType.TOUCH_START, () => changeLiquidColor());
     }
 
     addFlask(x: number, y: number, color?: cc.Color): cc.Node {

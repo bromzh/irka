@@ -17,9 +17,8 @@ export default class Torch extends cc.Component {
     start() {
         this.torchSprite = this.torchSpriteNode.getComponent(cc.Sprite);
         this.torchAnimation = this.torchSpriteNode.getComponent(cc.Animation);
-        this.node.on(cc.Node.EventType.MOUSE_DOWN, () => {
-            this.toggle();
-        });
+        this.node.on(cc.Node.EventType.MOUSE_DOWN, () => this.toggle());
+        this.node.on(cc.Node.EventType.TOUCH_START, () => this.toggle());
     }
 
     toggle() {
